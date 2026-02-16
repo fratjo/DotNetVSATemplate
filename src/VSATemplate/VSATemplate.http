@@ -1,0 +1,58 @@
+@VSATemplate_HostAddress = http://localhost:5206
+
+### Get all products
+GET {{VSATemplate_HostAddress}}/api/products
+Accept: application/json
+
+###
+
+### Get product by ID
+GET {{VSATemplate_HostAddress}}/api/products/1
+Accept: application/json
+
+###
+
+### Create new product
+POST {{VSATemplate_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Gaming Laptop",
+  "description": "High performance gaming laptop with RTX graphics",
+  "price": 1299.99,
+  "stockQuantity": 15
+}
+
+###
+
+### Create product with validation errors (should fail)
+POST {{VSATemplate_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "Test",
+  "price": -10,
+  "stockQuantity": -5
+}
+
+###
+
+### Update product (replace {id} with actual product ID)
+PUT {{VSATemplate_HostAddress}}/api/products/2
+Content-Type: application/json
+
+{
+  "name": "Gaming Laptop Pro",
+  "description": "Updated high performance gaming laptop",
+  "price": 1499.99,
+  "stockQuantity": 20
+}
+
+###
+
+### Delete product (replace {id} with actual product ID)
+DELETE {{VSATemplate_HostAddress}}/api/products/2
+
+###
+
