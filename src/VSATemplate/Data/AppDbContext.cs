@@ -32,7 +32,7 @@ public class AppDbContext : DbContext
                 Description = "This is a sample product",
                 Price = 29.99m,
                 StockQuantity = 100,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             }
         );
     }

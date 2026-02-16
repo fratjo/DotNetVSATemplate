@@ -30,8 +30,8 @@ public class CreateProductValidator : AbstractValidator<CreateProductCommand>
     }
 }
 
-// Handler
-public class CreateProductHandler : ICommandHandler<CreateProductCommand>
+// Handler that returns the created product ID
+public class CreateProductHandler
 {
     private readonly AppDbContext _context;
     private readonly IValidator<CreateProductCommand> _validator;
@@ -42,13 +42,13 @@ public class CreateProductHandler : ICommandHandler<CreateProductCommand>
         _validator = validator;
     }
 
-    public async Task<Result> HandleAsync(CreateProductCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<int>> HandleAsync(CreateProductCommand command, CancellationToken cancellationToken = default)
     {
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
             var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Failure(errors);
+            return Result.Failure<int>(errors);
         }
 
         var product = new Product
@@ -63,7 +63,7 @@ public class CreateProductHandler : ICommandHandler<CreateProductCommand>
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success(product.Id);
     }
 }
 
@@ -80,7 +80,7 @@ public static class CreateProductEndpoint
             var result = await handler.HandleAsync(command, cancellationToken);
 
             return result.IsSuccess
-                ? Results.Created($"/api/products", new { message = "Product created successfully" })
+                ? Results.Created($"/api/products/{result.Value}", new { id = result.Value, message = "Product created successfully" })
                 : Results.BadRequest(new { error = result.Error });
         })
         .WithName("CreateProduct")
