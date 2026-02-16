@@ -44,16 +44,16 @@ public class DeleteProductHandler : ICommandHandler<DeleteProductCommand>
             await _context.Products.FindAsync(new object[] { command.Id }, cancellationToken)
         );
 
-        // Pattern matching with Maybe
-        return maybeProduct.Match(
-            some: product =>
-            {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-                return Result.Success();
-            },
-            none: () => Result.Failure($"Product with ID {command.Id} not found")
-        );
+        // Check if product exists using Maybe
+        if (maybeProduct.HasNoValue)
+        {
+            return Result.Failure($"Product with ID {command.Id} not found");
+        }
+
+        _context.Products.Remove(maybeProduct.Value);
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return Result.Success();
     }
 }
 

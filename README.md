@@ -59,7 +59,7 @@ dotnet build
 dotnet run --project src/VSATemplate
 ```
 
-The API will be available at `http://localhost:5000`
+The API will be available at `http://localhost:5206`
 
 ### API Endpoints
 
