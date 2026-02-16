@@ -5,6 +5,37 @@ Vertical Slice Architecture ASP.NET Template
 
 This template demonstrates a **Vertical Slice Architecture** implementation in ASP.NET, providing an alternative to traditional layered architectures. Each feature is self-contained in a single file with all its concerns.
 
+### Request Flow Diagram
+
+```
+HTTP Request → Endpoint → Handler → Validator → Database → Result → HTTP Response
+                  ↓          ↓          ↓           ↓
+              Maps to    Business   FluentVal   EF Core/    Success/
+              Handler     Logic     Validation   Dapper     Failure
+```
+
+### Traditional Layered vs Vertical Slice
+
+**Traditional Layered Architecture:**
+```
+Controllers/  ← All controllers
+Services/     ← All services  
+Repositories/ ← All repositories
+Models/       ← All models
+```
+Changes to a feature require touching multiple folders.
+
+**Vertical Slice Architecture:**
+```
+Features/
+  Products/
+    CreateProduct.cs  ← Everything for creating a product
+    GetProduct.cs     ← Everything for getting a product
+    UpdateProduct.cs  ← Everything for updating a product
+    DeleteProduct.cs  ← Everything for deleting a product
+```
+Each feature is completely independent and self-contained.
+
 ## ✨ Key Features
 
 - **CQRS without MediatR** - Commands and Queries separated using custom interfaces
